@@ -1,0 +1,32 @@
+version: "3"
+
+# 서비스 정의
+services:
+    product-process-db:
+        image: mariadb
+        container_name: product-process-db
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: "product-process-db"
+            MYSQL_ROOT_PASSWORD: "root"
+        volumes:
+            - /home/heybys/docker/msa/product-process-db/data:/var/lib/mysql
+            - /home/heybys/docker/msa/product-process-db/config:/etc/mysql/conf.d
+            - /home/heybys/docker/msa/product-process-db/init/:/docker-entrypoint-initdb.d/
+        networks:
+            - msa-network
+    product-process:
+        image: product-process
+        container_name: product-process
+        ports:
+            - "8081:8081"
+        networks:
+            - msa-network
+
+
+# 네트워크 정의
+networks:
+    msa-network:
+        name: msa-network
+        driver: bridge
